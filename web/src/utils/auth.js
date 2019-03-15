@@ -11,7 +11,6 @@ export function parseToken (token) {
   }
 
   const data = JSON.parse(Base64.decode(parts[1]))
-
   if (Math.round(new Date().getTime() / 1000) > data.exp) {
     throw new Error('token expired')
   }

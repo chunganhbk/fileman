@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/raedahgroup/fileman/errors"
@@ -16,6 +15,7 @@ type userInfo struct {
 	ID           uint              `json:"id"`
 	Locale       string            `json:"locale"`
 	ViewMode     users.ViewMode    `json:"viewMode"`
+	Name         string    `json:"name"`
 	Perm         users.Permissions `json:"perm"`
 	LockPassword bool              `json:"lockPassword"`
 }
@@ -149,6 +149,7 @@ func printToken(w http.ResponseWriter, r *http.Request, d *data, user *users.Use
 	claims := &authToken{
 		User: userInfo{
 			ID:           user.ID,
+			Name:         string(user.Username[0]),
 			Locale:       user.Locale,
 			ViewMode:     user.ViewMode,
 			Perm:         user.Perm,
@@ -165,7 +166,6 @@ func printToken(w http.ResponseWriter, r *http.Request, d *data, user *users.Use
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	fmt.Println(token)
 	w.Header().Set("Content-Type", "cty")
 	w.Write([]byte(signed))
 	return 0, nil

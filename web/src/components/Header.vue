@@ -50,7 +50,7 @@
           </button>
         </div>
         <div class="menu-account" @click="menu =!menu">
-          <span class="avatar" >A</span>
+          <span class="avatar" >{{user.name}}</span>
         </div>
 
       </div>

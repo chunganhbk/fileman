@@ -133,7 +133,7 @@ export default {
       this.$store.commit('setReload', false)
       this.$store.commit('resetSelected')
       this.$store.commit('multiple', false)
-      this.$store.commit('closeHovers')
+      this.$store.commit('closeHovers');
 
       // Set loading to true and reset the error.
       this.setLoading(true)

@@ -132,12 +132,11 @@ export default {
           this.$showSuccess(this.$t('mangerUser.userCreated'))
         } else {
           await api.update(user)
-
           if (user.id === this.$store.state.user.id) {
             this.setUser({ ...deepClone(user) })
           }
+          this.$showSuccess(this.$t('mangerUser.userUpdated'));
 
-          this.$showSuccess(this.$t('mangerUser.userUpdated'))
         }
       } catch (e) {
         this.$showError(e)

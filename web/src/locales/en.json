@@ -136,6 +136,7 @@
     "newUser": "Create new User",
     "allowPublish": "Publish new posts and pages",
     "avoidChanges": "(leave blank to avoid changes)",
+
     "permissions": "Permissions",
     "lockPassword": "Prevent the user from changing the password",
     "permissionsHelp": "You can set the user to be an administrator or choose the permissions individually. If you select \"Administrator\", all of the other options will be automatically checked. The management of users remains a privilege of an administrator.\n",

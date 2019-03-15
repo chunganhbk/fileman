@@ -48,7 +48,7 @@ export default {
   props: [ 'user', 'isNew', 'isDefault' ],
   computed: {
     passwordPlaceholder () {
-      return this.isNew ? '' : this.$t('settings.avoidChanges')
+      return this.isNew ? '' : this.$t('mangerUser.avoidChanges')
     }
   },
   watch: {
