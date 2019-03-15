@@ -85,12 +85,12 @@ export default {
     async fetchData () {
       try {
         if (this.isNew) {
-          let { defaults } = await settings.get()
+
           this.user = {
-            ...defaults,
             username: '',
             passsword: '',
             rules: [],
+            perm: {},
             lockPassword: false,
             id: 0
           }
@@ -113,7 +113,7 @@ export default {
       try {
         await api.remove(this.user.id)
         this.$router.push({ path: '/users' })
-        this.$showSuccess(this.$t('settings.userDeleted'))
+        this.$showSuccess(this.$t('mangerUser.userDeleted'))
       } catch (e) {
         this.$showError(e)
       }
@@ -129,7 +129,7 @@ export default {
         if (this.isNew) {
           const loc = await api.create(user)
           this.$router.push({ path: loc })
-          this.$showSuccess(this.$t('settings.userCreated'))
+          this.$showSuccess(this.$t('mangerUser.userCreated'))
         } else {
           await api.update(user)
 
@@ -137,7 +137,7 @@ export default {
             this.setUser({ ...deepClone(user) })
           }
 
-          this.$showSuccess(this.$t('settings.userUpdated'))
+          this.$showSuccess(this.$t('mangerUser.userUpdated'))
         }
       } catch (e) {
         this.$showError(e)

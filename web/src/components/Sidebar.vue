@@ -23,7 +23,11 @@
           <span>{{ $t('sidebar.users') }}</span>
         </router-link>
       </div>
-
+      <div>
+        <button class="action" @click="logout" :aria-label="$t('sidebar.logout')" :title="$t('sidebar.logout')">
+          <i class="material-icons">exit_to_app</i><span>{{ $t('sidebar.logout') }}</span>
+        </button>
+      </div>
     </template>
     <template v-else>
       <router-link class="action" to="/login" :aria-label="$t('sidebar.login')" :title="$t('sidebar.login')">

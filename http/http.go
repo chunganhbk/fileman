@@ -52,7 +52,7 @@ func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handl
 		AllowedMethods: []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowedHeaders: []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
 	})
-	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(rice.MustFindBox("../frontend/dist").HTTPBox())))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(rice.MustFindBox("../web/dist").HTTPBox())))
 	//return http.StripPrefix(config.BaseURL, r), nil
 	return c.Handler(r), nil
 }

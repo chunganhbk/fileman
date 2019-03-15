@@ -51,12 +51,6 @@
         </div>
         <div class="menu-account" @click="menu =!menu">
           <span class="avatar" >A</span>
-            <ul class="dropdown-content" v-show="menu">
-              <a @click="logout" class="action" id="logout"  :title="$t('sidebar.logout')">
-                <i class="material-icons">exit_to_app</i><span>{{ $t('sidebar.logout') }}</span>
-              </a>
-
-            </ul>
         </div>
 
       </div>
@@ -82,7 +76,7 @@ import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
 import * as api from '@/api'
 import buttons from '@/utils/buttons'
-
+import * as auth from '@/utils/auth'
 export default {
   name: 'header-layout',
   components: {
@@ -190,7 +184,10 @@ export default {
     },
     resetPrompts () {
       this.$store.commit('closeHovers')
-    }
+    },
+      logout: auth.logout
+
+
   }
 }
 </script>
@@ -223,27 +220,30 @@ export default {
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+
     padding-left: 20px;
     right: -15px;
   }
-
+  .menu-account .dropdown-content>* {
+    vertical-align: middle;
+  }
   /* Links inside the dropdown */
   .dropdown-content a {
     color: black;
     padding: 12px 0px;
     text-decoration: none;
-    display: block;
+
   }
 
   /* Change color of dropdown links on hover */
   .dropdown-content a:hover {background-color: #f1f1f1}
 
-  /* Show the dropdown menu on hover */
-  .menu-account:hover .dropdown-content {
-    display: block;
-  }
-  .dropdown-content a span {
-    display: inline-block;
+
+  .dropdown-content i {
+    padding: 0.4em;
+    -webkit-transition: .1s ease-in-out all;
+    transition: .1s ease-in-out all;
+    border-radius: 50%;
   }
 
 </style>
