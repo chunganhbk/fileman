@@ -132,6 +132,7 @@
     "password": "Password",
     "userDeleted": "User deleted!",
     "userCreated": "User created!",
+    "userUpdated": "User updated!",
     "scope": "Scope",
     "newUser": "Create new User",
     "allowPublish": "Publish new posts and pages",
