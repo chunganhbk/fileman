@@ -23,7 +23,6 @@ type User struct {
 	LockPassword bool          `json:"lockPassword"`
 	ViewMode     ViewMode      `json:"viewMode"`
 	Perm         Permissions   `json:"perm"`
-	Commands     []string      `json:"commands"`
 	Sorting      files.Sorting `json:"sorting"`
 	Rules        []rules.Rule  `json:"rules"`
 }

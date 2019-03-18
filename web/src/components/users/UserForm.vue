@@ -10,7 +10,7 @@
       <input class="input input--block" type="password" :placeholder="passwordPlaceholder" v-model="user.password" id="password">
     </p>
 
-    <p>
+    <p v-if="user.id !=1">
       <label for="scope">{{ $t('mangerUser.scope') }}</label>
       <input class="input input--block" type="text" v-model="user.scope" id="scope">
     </p>

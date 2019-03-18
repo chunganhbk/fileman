@@ -15,7 +15,7 @@ type ConfigState struct {
 	JWTKEY       string `yaml:"jwt_key"`
 	DatabasePath string `yaml:"database_path"`
 	BaseURL string `yaml:"base_url"`
-	Root string `yaml:"root"`
+	RootPath string `yaml:"root_path"`
 
 }
 func Load(filePath string) error {

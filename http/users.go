@@ -2,13 +2,14 @@ package http
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/raedahgroup/fileman/errors"
 	"github.com/raedahgroup/fileman/users"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
-	"github.com/gorilla/mux"
 )
 
 type modifyUserRequest struct {
@@ -117,13 +118,15 @@ var userPostHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-
+	if(req.Data.Scope != ""){
+		os.MkdirAll(d.config.RootPath + "/" + req.Data.Scope, 755)
+	}
 	err = d.store.Users.Save(req.Data)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 
-	w.Header().Set("Location", "/settings/users/"+strconv.FormatUint(uint64(req.Data.ID), 10))
+	w.Header().Set("Location", "/users/"+strconv.FormatUint(uint64(req.Data.ID), 10))
 	return http.StatusCreated, nil
 })
 
@@ -136,7 +139,9 @@ var userPutHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request
 	if req.Data.ID != d.raw.(uint) {
 		return http.StatusBadRequest, nil
 	}
-
+	if(req.Data.Scope != ""){
+		os.MkdirAll(d.config.RootPath + "/" + req.Data.Scope, 755);
+	}
 	if len(req.Which) == 1 && req.Which[0] == "all" {
 		if !d.user.Perm.Admin {
 			return http.StatusForbidden, err

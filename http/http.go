@@ -10,6 +10,7 @@ import (
 	"github.com/rs/cors"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -76,6 +77,7 @@ func createAdminDemo(store *storage.Storage) error {
 			Download: true,
 		},
 	}
+	os.MkdirAll(config.State.RootPath, 755)
 	err = store.Users.Save(user)
 	return err
 }
@@ -84,8 +86,9 @@ func FindForder(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Do stuff here
 		log.Println(r.RequestURI)
-		forder := strings.Split(r.URL.Path, "api/resources")
-		r.URL.Path = "./uploads" + forder[1]
+		forder := strings.Split(r.URL.Path, "api/resources");
+
+		r.URL.Path = forder[1]
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 	})

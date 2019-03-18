@@ -61,8 +61,12 @@ var rawHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) 
 		return http.StatusAccepted, nil
 	}
 	println("path", r.URL.Path)
-	filePathArr := strings.Split(r.URL.Path, "/api/raw")
-	filePath := "./uploads" + filePathArr[1]
+	filePathArr := strings.Split(r.URL.Path, "/api/raw");
+	filePath := d.config.RootPath
+	if(d.user.Scope != ""){
+		filePath += d.user.Scope
+	}
+	filePath += filePathArr[1]
 	file, err := files.NewFileInfo(files.FileOptions{
 		Path:    filePath,
 		Modify:  d.user.Perm.Modify,

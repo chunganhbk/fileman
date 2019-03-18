@@ -12,7 +12,7 @@
 
       <div class="card-action">
         <button
-          v-if="!isNew"
+          v-if="!isNew && user.id !=1"
           @click.prevent="deletePrompt"
           type="button"
           class="button button--flat button--red"

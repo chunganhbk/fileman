@@ -1,6 +1,7 @@
 debug: true
 port: "4000"
 api_version: "1"
+root_path: "./uploads"
 base_url: "http://localhost:4000"
 database_path: "./database/test.db"
 jwt_key: "raedahgroup2019"

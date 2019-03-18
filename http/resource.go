@@ -12,12 +12,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
 )
 
 var resourceGetHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
+	path := d.config.RootPath;
+	if(d.user.Scope != ""){
+		path += "/" +d.user.Scope
+	}
 	file, err := files.NewFileInfo(files.FileOptions{
-		Path:    r.URL.Path,
+		Path:    path+ r.URL.Path,
 		Modify:  d.user.Perm.Modify,
 		Expand:  true,
 		Checker: d,
@@ -71,24 +74,28 @@ var resourcePostPutHandler = withUser(func(w http.ResponseWriter, r *http.Reques
 	defer func() {
 		io.Copy(ioutil.Discard, r.Body)
 	}()
-
+	path:= d.config.RootPath;
+	if(d.user.Scope != ""){
+		path += "/" +d.user.Scope;
+	}
 	// For directories, only allow POST for creation.
 	if strings.HasSuffix(r.URL.Path, "/") {
 		if r.Method == http.MethodPut {
 			return http.StatusMethodNotAllowed, nil
 		}
-		err := os.MkdirAll(filepath.Dir(r.URL.Path), 775);
+
+		err := os.MkdirAll(filepath.Dir(path + r.URL.Path), 775);
 
 		return errToStatus(err), err
 	}
 
 	if r.Method == http.MethodPost && r.URL.Query().Get("override") != "true" {
-		if _, err := os.Stat(r.URL.Path); err == nil {
+		if _, err := os.Stat(path +r.URL.Path); err == nil {
 			return http.StatusConflict, nil
 		}
 	}
 
-	file, err := os.OpenFile(r.URL.Path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0775)
+	file, err := os.OpenFile(path+ r.URL.Path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0775)
 	if err != nil {
 		return errToStatus(err), err
 	}
