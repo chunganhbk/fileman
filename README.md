@@ -2,7 +2,7 @@
 + Frontent: We are using use vuejx
 
     ````
-    cd frontend
+    cd web
     # Install the dependencies
     npm install
     # Build the frontend
