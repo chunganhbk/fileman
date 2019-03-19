@@ -12,8 +12,6 @@ require (
 	github.com/maruel/natural v0.0.0-20180416170133-dbcb3e2e8cf1
 	github.com/mholt/archiver v3.1.1+incompatible
 	github.com/rs/cors v1.6.0
-	github.com/spf13/afero v1.2.1
-	gitlab.com/chunganhbk/upload-files v0.0.0-20190312085341-c32c60d0b588
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 	gopkg.in/yaml.v2 v2.2.2
 )
