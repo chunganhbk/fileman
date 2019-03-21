@@ -14,7 +14,6 @@ type ConfigState struct {
 	APIVersion   string `yaml:"api_version"`
 	JWTKEY       string `yaml:"jwt_key"`
 	DatabasePath string `yaml:"database_path"`
-	BaseURL string `yaml:"base_url"`
 	RootPath string `yaml:"root_path"`
 
 }

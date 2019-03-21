@@ -1,17 +1,12 @@
 package http
 
 import (
-	"fmt"
 	"github.com/GeertJohan/go.rice"
 	"github.com/gorilla/mux"
 	"github.com/raedahgroup/fileman/config"
 	"github.com/raedahgroup/fileman/storage"
-	"github.com/raedahgroup/fileman/users"
 	"github.com/rs/cors"
-	"log"
 	"net/http"
-	"os"
-	"strings"
 )
 
 type modifyRequest struct {
@@ -25,7 +20,7 @@ func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handl
 	monkey := func(fn handleFunc) http.Handler {
 		return handle(fn, storage, config)
 	}
-	go createAdminDemo(storage)
+
 	api := r.PathPrefix("/api").Subrouter()
 	api.Handle("/login", monkey(loginHandler)).Methods("POST")
 	api.Handle("/signup", monkey(signupHandler))
@@ -41,7 +36,6 @@ func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handl
 	api.PathPrefix("/raw").Handler(monkey(rawHandler)).Methods("GET")
 
 	resources := api.PathPrefix("/resources").Subrouter()
-	resources.Use(FindForder)
 	resources.PathPrefix("/").Handler(monkey(resourceGetHandler)).Methods("GET")
 	resources.PathPrefix("/").Handler(monkey(resourceDeleteHandler)).Methods("DELETE")
 	resources.PathPrefix("/").Handler(monkey(resourcePostPutHandler)).Methods("POST")
@@ -57,39 +51,4 @@ func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handl
 	//return http.StripPrefix(config.BaseURL, r), nil
 	return c.Handler(r), nil
 }
-func createAdminDemo(store *storage.Storage) error {
-	pwd, err := users.HashPwd("123456")
-	if err != nil {
-		fmt.Println("hash password", err)
-	}
-	user := &users.User{
-		Username:     "admin",
-		Password:     pwd,
-		LockPassword: true,
-		Perm: users.Permissions{
-			Admin:    true,
-			Execute:  true,
-			Create:   true,
-			Rename:   true,
-			Modify:   true,
-			Delete:   true,
-			Share:    true,
-			Download: true,
-		},
-	}
-	os.MkdirAll(config.State.RootPath, 755)
-	err = store.Users.Save(user)
-	return err
-}
 
-func FindForder(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Do stuff here
-		log.Println(r.RequestURI)
-		forder := strings.Split(r.URL.Path, "api/resources");
-
-		r.URL.Path = forder[1]
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(w, r)
-	})
-}

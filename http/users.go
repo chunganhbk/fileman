@@ -6,7 +6,6 @@ import (
 	"github.com/raedahgroup/fileman/errors"
 	"github.com/raedahgroup/fileman/users"
 	"net/http"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -61,7 +60,7 @@ func withSelfOrAdmin(fn handleFunc) handleFunc {
 }
 
 var usersGetHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
-	users, err := d.store.Users.Gets()
+	users, err := d.store.Users.Gets(d.config.RootPath)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -78,7 +77,7 @@ var usersGetHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *
 })
 
 var userGetHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
-	u, err := d.store.Users.Get(d.raw.(uint))
+	u, err := d.store.Users.Get(d.config.RootPath, d.raw.(uint))
 	if err == errors.ErrNotExist {
 		return http.StatusNotFound, err
 	}
@@ -118,9 +117,6 @@ var userPostHandler = withAdmin(func(w http.ResponseWriter, r *http.Request, d *
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	if(req.Data.Scope != ""){
-		os.MkdirAll(d.config.RootPath + "/" + req.Data.Scope, 755)
-	}
 	err = d.store.Users.Save(req.Data)
 	if err != nil {
 		return http.StatusInternalServerError, err
@@ -139,9 +135,6 @@ var userPutHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request
 	if req.Data.ID != d.raw.(uint) {
 		return http.StatusBadRequest, nil
 	}
-	if(req.Data.Scope != ""){
-		os.MkdirAll(d.config.RootPath + "/" + req.Data.Scope, 755);
-	}
 	if len(req.Which) == 1 && req.Which[0] == "all" {
 		if !d.user.Perm.Admin {
 			return http.StatusForbidden, err
@@ -151,7 +144,7 @@ var userPutHandler = withSelfOrAdmin(func(w http.ResponseWriter, r *http.Request
 			req.Data.Password, err = users.HashPwd(req.Data.Password)
 		} else {
 			var suser *users.User
-			suser, err = d.store.Users.Get( d.raw.(uint))
+			suser, err = d.store.Users.Get(d.config.RootPath, d.raw.(uint))
 			req.Data.Password = suser.Password
 		}
 

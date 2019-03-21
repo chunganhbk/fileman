@@ -35,19 +35,23 @@ func NewStorage(back StorageBackend) *Storage {
 // Get allows you to get a user by its name or username. The provided
 // id must be a string for username lookup or a uint for id lookup. If id
 // is neither, a ErrInvalidDataType will be returned.
-func (s *Storage) Get( id interface{}) (user *User, err error) {
+func (s *Storage) Get( baseScope string, id interface{}) (user *User, err error) {
 	user, err = s.back.GetBy(id)
 	if err != nil {
 		return nil, err
 	}
+	user.Clean(baseScope)
 	return user, err
 }
 
 // Gets gets a list of all users.
-func (s *Storage) Gets() ([]*User, error) {
+func (s *Storage) Gets(baseScope string) ([]*User, error) {
 	users, err := s.back.Gets()
 	if err != nil {
 		return nil, err
+	}
+	for _, user := range users {
+		user.Clean(baseScope)
 	}
 	return users, err
 }

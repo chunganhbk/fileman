@@ -1,11 +1,13 @@
 package files
 
+import "C"
 import (
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
+	"fmt"
 	"github.com/raedahgroup/fileman/errors"
 	"github.com/raedahgroup/fileman/rules"
 	"github.com/spf13/afero"
@@ -25,6 +27,7 @@ import (
 // FileInfo describes a file.
 type FileInfo struct {
 	*Listing
+	Fs        afero.Fs          `json:"-"`
 	Path      string            `json:"path"`
 	Name      string            `json:"name"`
 	Size      int64             `json:"size"`
@@ -54,16 +57,15 @@ func NewFileInfo(opts FileOptions) (*FileInfo, error) {
 	if !opts.Checker.Check(opts.Path) {
 		return nil, os.ErrPermission
 	}
-
-	//info, err := opts.Fs.Stat(opts.Path)
-	info, err :=  os.Stat(opts.Path)
-
+	info, err :=  opts.Fs.Stat(opts.Path)
+	fmt.Println("err file",info, err);
 	if err != nil {
 		return nil, err
 	}
 
 	file := &FileInfo{
 		Path:      opts.Path,
+		Fs:        opts.Fs,
 		Name:      info.Name(),
 		ModTime:   info.ModTime(),
 		Mode:      info.Mode(),
@@ -198,14 +200,14 @@ func (i *FileInfo) detectSubtitles() {
 	// TODO: detect multiple languages. Base.Lang.vtt
 
 	path := strings.TrimSuffix(i.Path, ext) + ".vtt"
-	if _, err := os.Stat(path); err == nil {
+	if _, err := i.Fs.Stat(path); err == nil {
 		i.Subtitles = append(i.Subtitles, path)
 	}
 }
 
 func (i *FileInfo) readListing(checker rules.Checker) error {
-	//afs := &afero.Afero{Fs: i.Fs}
-	dir, err := ioutil.ReadDir(i.Path)
+	afs := &afero.Afero{Fs: i.Fs}
+	dir, err := afs.ReadDir(i.Path)
 	if err != nil {
 		return err
 	}
@@ -227,13 +229,14 @@ func (i *FileInfo) readListing(checker rules.Checker) error {
 		if strings.HasPrefix(f.Mode().String(), "L") {
 			// It's a symbolic link. We try to follow it. If it doesn't work,
 			// we stay with the link information instead if the target's.
-			info, err := os.Stat(path)
+			info, err := i.Fs.Stat(path)
 			if err == nil {
 				f = info
 			}
 		}
 
 		file := &FileInfo{
+			Fs:        i.Fs,
 			Name:      name,
 			Size:      f.Size(),
 			ModTime:   f.ModTime(),

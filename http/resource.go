@@ -10,19 +10,15 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
 var resourceGetHandler = withUser(func(w http.ResponseWriter, r *http.Request, d *data) (int, error) {
-	path := d.config.RootPath;
-	if(d.user.Scope != ""){
-		path += "/" +d.user.Scope
-	}
 	file, err := files.NewFileInfo(files.FileOptions{
-		Path:    path+ r.URL.Path,
+		Path:    r.URL.Path,
 		Modify:  d.user.Perm.Modify,
 		Expand:  true,
+		Fs:      d.user.Fs,
 		Checker: d,
 	})
 	if err != nil {
@@ -54,7 +50,7 @@ var resourceDeleteHandler = withUser(func(w http.ResponseWriter, r *http.Request
 	if r.URL.Path == "/" || !d.user.Perm.Delete {
 		return http.StatusForbidden, nil
 	}
-	err := os.RemoveAll(r.URL.Path)
+	err := d.user.Fs.RemoveAll(r.URL.Path)
 	if err != nil {
 		return errToStatus(err), err
 	}
@@ -74,28 +70,25 @@ var resourcePostPutHandler = withUser(func(w http.ResponseWriter, r *http.Reques
 	defer func() {
 		io.Copy(ioutil.Discard, r.Body)
 	}()
-	path:= d.config.RootPath;
-	if(d.user.Scope != ""){
-		path += "/" +d.user.Scope;
-	}
+
 	// For directories, only allow POST for creation.
 	if strings.HasSuffix(r.URL.Path, "/") {
 		if r.Method == http.MethodPut {
 			return http.StatusMethodNotAllowed, nil
 		}
 
-		err := os.MkdirAll(filepath.Dir(path + r.URL.Path), 775);
+		err := d.user.Fs.MkdirAll(r.URL.Path, 775);
 
 		return errToStatus(err), err
 	}
 
 	if r.Method == http.MethodPost && r.URL.Query().Get("override") != "true" {
-		if _, err := os.Stat(path +r.URL.Path); err == nil {
+		if _, err := d.user.Fs.Stat(r.URL.Path); err == nil {
 			return http.StatusConflict, nil
 		}
 	}
 
-	file, err := os.OpenFile(path+ r.URL.Path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0775)
+	file, err := d.user.Fs.OpenFile(r.URL.Path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0775)
 	if err != nil {
 		return errToStatus(err), err
 	}
