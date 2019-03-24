@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
-	"fmt"
 	"github.com/raedahgroup/fileman/errors"
 	"github.com/raedahgroup/fileman/rules"
 	"github.com/spf13/afero"
@@ -58,7 +57,6 @@ func NewFileInfo(opts FileOptions) (*FileInfo, error) {
 		return nil, os.ErrPermission
 	}
 	info, err :=  opts.Fs.Stat(opts.Path)
-	fmt.Println("err file",info, err);
 	if err != nil {
 		return nil, err
 	}

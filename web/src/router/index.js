@@ -9,6 +9,7 @@ import Files from '@/views/Files'
 import Error403 from '@/views/errors/403'
 import Error404 from '@/views/errors/404'
 import Error500 from '@/views/errors/500'
+import {baseURL} from '@/utils/constants'
 Vue.use(VueRouter)
 
 const routes = [
@@ -87,7 +88,7 @@ const routes = [
 // eslint-disable-next-line no-new
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: baseURL,
   routes
 });
 router.beforeEach((to, from, next) => {

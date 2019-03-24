@@ -1,10 +1,12 @@
-const name =  'File manger'
+const name =   window.FileMan.NAME || "file Manger"
 const logoURL = require('../assets/logo.png')
 const loginPage = "login"
-const baseURL = process.env.VUE_APP_BASE_URL
+const baseURL =  ""
+const locale =  window.FileMan.LOCALE || "en"
 export {
   name,
   logoURL,
-    baseURL,
+  baseURL,
+  locale,
   loginPage
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="login" >
     <form @submit="submit">
-      <!--<img :src="logoURL" alt="File man">-->
+      <!--<img :src="" alt="File man">-->
       <h1>{{ name }}</h1>
       <div v-if="error !== ''" class="wrong">{{ error }}</div>
 
@@ -14,7 +14,7 @@
 
 <script>
 import * as auth from '@/utils/auth'
-import { name, logoURL } from '@/utils/constants'
+import { name,  } from '@/utils/constants'
 
 export default {
   name: 'login',

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"flag"
 	"fmt"
 	"github.com/asdine/storm"
 	"github.com/mitchellh/go-homedir"
@@ -16,32 +17,41 @@ import (
 	"net"
 	"net/http"
 )
+var (
+	host     = flag.String("host", "127.0.0.1", "TCP host to listen to")
+	port     = flag.String("port", "8081", "TCP port to listen to")
+	homeDir     = flag.String("dir", "", "Folder's user have been uploads")
+	baseURL      = flag.String("baseurl", "", "Directory to serve static files from")
+)
 
 func main() {
-
+	flag.Parse();
+	//folder home os
 	home, err := homedir.Dir();
-	checkErr(err);
 	//home file man
-	//windows
 	homeFileMan := home + "/fileman/";
+	checkErr(err);
+	if(*homeDir == ""){
+		*homeDir = homeFileMan;
+	}
+
 	appfs := afero.NewOsFs();
 	//create forder fileman
-	appfs.MkdirAll(homeFileMan, 0755);
-	appfs.MkdirAll(homeFileMan + "/api/resources/", 0775)
+	appfs.MkdirAll(*homeDir, 0755);
 	config := config.ConfigState{
 		DatabasePath: homeFileMan + "fileman.db",
 		Port: "4000",
-		RootPath: homeFileMan,
+		RootPath: *homeDir,
 		JWTKEY: "fileman@2019",
+		BaseURL: *baseURL,
 	}
 	db, err := storm.Open(config.DatabasePath)
 	checkErr(err)
 	defer db.Close()
 	store, err := bolt.NewStorage(db);
 	go createAdminDemo(store)
-	adr := "127.0.0.1:"   + config.Port
 	var listener net.Listener
-	listener, err = net.Listen("tcp", adr)
+	listener, err = net.Listen("tcp", fmt.Sprintf("%s:%s", *host, *port))
 	checkErr(err)
 	handler, err := ctl.NewHandler(store, config)
 	log.Println("Listening on", listener.Addr().String())
@@ -64,6 +74,7 @@ func createAdminDemo(store *storage.Storage) error {
 		Username:     "admin",
 		Password:     pwd,
 		LockPassword: true,
+		Scope: "/",
 		Perm: users.Permissions{
 			Admin:    true,
 			Execute:  true,
@@ -76,7 +87,6 @@ func createAdminDemo(store *storage.Storage) error {
 		},
 	}
 	err = store.Users.Save(user);
-	fmt.Println(err)
 	return  err
 
 }

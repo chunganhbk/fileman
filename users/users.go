@@ -78,7 +78,6 @@ func (u *User) Clean(baseScope string, fields ...string) error {
 
 	if u.Fs == nil {
 		scope := u.Scope
-
 		if !filepath.IsAbs(scope) {
 			scope = filepath.Join(baseScope, scope)
 		}

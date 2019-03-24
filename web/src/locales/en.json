@@ -147,7 +147,7 @@
       "download": "Download",
       "modify": "Edit files",
       "execute": "Execute commands",
-      "rename": "Rename or move files and directories",
+      "rename": "Rename files and directories",
       "share": "Share files"
     }
   }
