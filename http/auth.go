@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/raedahgroup/fileman/errors"
@@ -93,6 +94,7 @@ var loginHandler = func(w http.ResponseWriter, r *http.Request, d *data) (int, e
 		return http.StatusForbidden, nil
 	}
 	user, err :=  d.store.Users.Get(d.config.RootPath, cred.Username)
+	fmt.Println(user, err)
 	if err != nil || !users.CheckPwd(cred.Password, user.Password) {
 		return http.StatusForbidden, nil
 	} else {
