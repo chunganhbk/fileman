@@ -74,7 +74,7 @@
       </item>
     </div>
 
-    <input style="display:none" type="file" id="upload-input1" @change="uploadInput($event)" multiple>
+    <input style="display:none" type="file" id="upload-input" @change="uploadInput($event)" multiple>
 
     <div :class="{ active: $store.state.multiple }" id="multiple-selection">
     <p>{{ $t('files.multipleSelectionEnabled') }}</p>
@@ -88,7 +88,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import Item from './ListingItem'
-import css from '@/utils/css'
 import { users, files as api } from '@/api'
 import buttons from '@/utils/buttons'
 
@@ -103,16 +102,16 @@ export default {
   computed: {
     ...mapState(['req', 'selected', 'user']),
     nameSorted () {
-      return (this.req.sorting.by === 'name')
+      return (this.req.sorting && this.req.sorting.by === 'name')
     },
     sizeSorted () {
-      return (this.req.sorting.by === 'size')
+      return (this.req.sorting && this.req.sorting.by === 'size')
     },
     modifiedSorted () {
-      return (this.req.sorting.by === 'modified')
+      return (this.req.sorting &&this.req.sorting.by === 'modified')
     },
     ascOrdered () {
-      return this.req.sorting.asc
+      return this.req.sorting && this.req.sorting.asc
     },
     items () {
       const dirs = []
@@ -161,12 +160,10 @@ export default {
     }
   },
   mounted: function () {
-    // Check the columns size for the first time.
-    this.resizeEvent()
 
     // Add the needed event listeners to the window and document.
     window.addEventListener('keydown', this.keyEvent)
-    window.addEventListener('resize', this.resizeEvent)
+
     window.addEventListener('scroll', this.scrollEvent)
     document.addEventListener('dragover', this.preventDefault)
     document.addEventListener('drop', this.drop)
@@ -174,7 +171,6 @@ export default {
   beforeDestroy () {
     // Remove event listeners before destroying this page.
     window.removeEventListener('keydown', this.keyEvent)
-    window.removeEventListener('resize', this.resizeEvent)
     window.removeEventListener('scroll', this.scrollEvent)
     document.removeEventListener('dragover', this.preventDefault)
     document.removeEventListener('drop', this.drop)
@@ -259,13 +255,6 @@ export default {
       api.copy(items).then(() => {
         this.$store.commit('setReload', true)
       }).catch(this.$showError)
-    },
-    resizeEvent () {
-      // Update the columns size based on the window width.
-      let columns = Math.floor(document.querySelector('main').offsetWidth / 300)
-      let items = css(['#listing.mosaic .item', '.mosaic#listing .item'])
-      if (columns === 0) columns = 1
-      items.style.width = `calc(${100 / columns}% - 1em)`
     },
     scrollEvent () {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {

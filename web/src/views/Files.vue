@@ -15,9 +15,9 @@
       <forbidden v-else-if="error.message === '403'"></forbidden>
       <internal-error v-else></internal-error>
     </div>
-    <editor v-else-if="isEditor"></editor>
-    <listing :class="{ multiple }" v-else-if="isListing"></listing>
-    <preview v-else-if="isPreview"></preview>
+
+    <listing :class="{ multiple }" v-else></listing>
+
     <div v-else>
       <h2 class="message">
         <span>{{ $t('files.loading') }}</span>
@@ -30,9 +30,8 @@
 import Forbidden from './errors/403'
 import NotFound from './errors/404'
 import InternalError from './errors/500'
-import Preview from '@/components/files/Preview'
 import Listing from '@/components/files/Listing'
-import Editor from '@/components/files/Editor'
+
 import { files as api } from '@/api'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 
@@ -46,9 +45,7 @@ export default {
     Forbidden,
     NotFound,
     InternalError,
-    Preview,
-    Listing,
-    Editor
+    Listing
   },
   computed: {
     ...mapGetters([

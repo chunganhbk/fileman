@@ -52,7 +52,7 @@
     "myFiles": "My files",
     "newFile": "New file",
     "newFolder": "New folder",
-    "users": "Manger Users",
+    "users": "Manage Users",
     "preview": "Preview"
   },
   "success": {
@@ -124,7 +124,7 @@
     "pressToSearch": "Press enter to search..."
   },
   "mangerUser": {
-    "users": "Manger users",
+    "users": "Manage Users",
     "username": "Username",
     "admin": "Admin",
     "administrator": "Administrator",

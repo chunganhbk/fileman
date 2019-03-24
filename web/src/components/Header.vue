@@ -25,8 +25,8 @@
           <span v-if="selectedCount > 0">{{ selectedCount }} selected</span>
          <!-- <share-button v-show="showShareButton"></share-button>-->
           <rename-button v-show="showRenameButton"></rename-button>
-          <copy-button v-show="showCopyButton"></copy-button>
-          <move-button v-show="showMoveButton"></move-button>
+         <!-- <copy-button v-show="showCopyButton"></copy-button>
+          <move-button v-show="showMoveButton"></move-button>-->
           <delete-button v-show="showDeleteButton"></delete-button>
         </div>
         <!-- This buttons are shown on a dropdown on mobile phones -->
@@ -34,20 +34,20 @@
           <div v-if="!isListing || !isMobile">
           <!--  <share-button v-show="showShareButton"></share-button>-->
             <rename-button v-show="showRenameButton"></rename-button>
-            <copy-button v-show="showCopyButton"></copy-button>
-            <move-button v-show="showMoveButton"></move-button>
+        <!--    <copy-button v-show="showCopyButton"></copy-button>
+            <move-button v-show="showMoveButton"></move-button>-->
             <delete-button v-show="showDeleteButton"></delete-button>
           </div>
 
-          <switch-button v-show="isListing"></switch-button>
-          <download-button v-show="showDownloadButton"></download-button>
+       <!--   <switch-button v-show="isListing"></switch-button>-->
+        <!--  <download-button v-show="showDownloadButton"></download-button>-->
           <upload-button v-show="showUpload"></upload-button>
           <info-button v-show="isFiles"></info-button>
 
-          <button v-show="isListing" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
+          <!--<button v-show="isListing" @click="openSelect" :aria-label="$t('buttons.selectMultiple')" :title="$t('buttons.selectMultiple')" class="action">
             <i class="material-icons">check_circle</i>
             <span>{{ $t('buttons.select') }}</span>
-          </button>
+          </button>-->
         </div>
         <div class="menu-account" @click="menu =!menu">
           <span class="avatar" >{{user.name}}</span>

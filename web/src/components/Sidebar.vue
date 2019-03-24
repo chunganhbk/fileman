@@ -12,10 +12,10 @@
           <span>{{ $t('sidebar.newFolder') }}</span>
         </button>
 
-        <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
+     <!--   <button @click="$store.commit('showHover', 'newFile')" class="action" :aria-label="$t('sidebar.newFile')" :title="$t('sidebar.newFile')">
           <i class="material-icons">note_add</i>
           <span>{{ $t('sidebar.newFile') }}</span>
-        </button>
+        </button>-->
       </div>
       <div  v-if="user.perm.admin">
         <router-link class="action" to="/users" :aria-label="$t('sidebar.users')" :title="$t('sidebar.users')">

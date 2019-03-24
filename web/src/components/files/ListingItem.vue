@@ -162,6 +162,7 @@ export default {
       }
     },
     open: function () {
+        if(!this.isDir) return;
       this.$router.push({path: this.url})
     }
   }
