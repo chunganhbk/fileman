@@ -32,7 +32,7 @@ func main() {
 	homeFileMan := home + "/fileman/";
 	checkErr(err);
 	if(*homeDir == ""){
-		*homeDir = homeFileMan;
+		*homeDir = homeFileMan + "/uploads";
 	}
 
 	appfs := afero.NewOsFs();
