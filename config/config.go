@@ -9,7 +9,6 @@ import (
 var State ConfigState
 
 type ConfigState struct {
-	Port         string   `yaml:"port"`
 	JWTKEY       string `yaml:"jwt_key"`
 	DatabasePath string `yaml:"database_path"`
 	RootPath string `yaml:"root_path"`

@@ -40,7 +40,6 @@ func main() {
 	appfs.MkdirAll(*homeDir, 0755);
 	config := config.ConfigState{
 		DatabasePath: homeFileMan + "fileman.db",
-		Port: "4000",
 		RootPath: *homeDir,
 		JWTKEY: "fileman@2019",
 		BaseURL: *baseURL,
