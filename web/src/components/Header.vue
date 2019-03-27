@@ -69,7 +69,6 @@ import DeleteButton from './buttons/Delete'
 import RenameButton from './buttons/Rename'
 import UploadButton from './buttons/Upload'
 import SwitchButton from './buttons/SwitchView'
-import ShareButton from './buttons/Share'
 import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
 import * as api from '@/api'
@@ -78,10 +77,8 @@ import * as auth from '@/utils/auth'
 export default {
   name: 'header-layout',
   components: {
-    Search,
     InfoButton,
     DeleteButton,
-    ShareButton,
     RenameButton,
     UploadButton,
     SwitchButton,
