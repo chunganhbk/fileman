@@ -68,10 +68,7 @@ import InfoButton from './buttons/Info'
 import DeleteButton from './buttons/Delete'
 import RenameButton from './buttons/Rename'
 import UploadButton from './buttons/Upload'
-import DownloadButton from './buttons/Download'
 import SwitchButton from './buttons/SwitchView'
-import MoveButton from './buttons/Move'
-import CopyButton from './buttons/Copy'
 import ShareButton from './buttons/Share'
 import {mapGetters, mapState} from 'vuex'
 import { logoURL } from '@/utils/constants'
@@ -86,11 +83,8 @@ export default {
     DeleteButton,
     ShareButton,
     RenameButton,
-    DownloadButton,
-    CopyButton,
     UploadButton,
     SwitchButton,
-    MoveButton
   },
   data: function () {
     return {
