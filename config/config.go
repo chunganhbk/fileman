@@ -2,25 +2,30 @@
 package config
 
 import (
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
+	"math/rand"
+	"strings"
 )
 
-var State ConfigState
-
-type ConfigState struct {
+type Server struct {
 	JWTKEY       string `yaml:"jwt_key"`
-	DatabasePath string `yaml:"database_path"`
 	RootPath string `yaml:"root_path"`
 	BaseURL string `yaml:"root_path"`
 
 }
-func Load(filePath string) error {
-	configFile, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-	err = yaml.Unmarshal(configFile, &State)
-	return err
+
+// Clean cleans any variables that might need cleaning.
+func (s *Server) Clean() {
+	s.BaseURL = strings.TrimSuffix(s.BaseURL, "/")
 }
 
+// GenerateKey generates a key of 256 bits.
+func GenerateKey() ([]byte, error) {
+	b := make([]byte, 64)
+	_, err := rand.Read(b)
+	// Note that err == nil only if we read len(b) bytes.
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}

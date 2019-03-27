@@ -15,7 +15,7 @@ type handleFunc func(w http.ResponseWriter, r *http.Request, d *data) (int, erro
 type data struct {
 
 	store    *storage.Storage
-	config   config.ConfigState
+	config   *config.Server
 	user     *users.User
 	raw      interface{}
 }
@@ -31,7 +31,7 @@ func (d *data) Check(path string) bool {
 	return true
 }
 
-func handle(fn handleFunc, storage *storage.Storage, config config.ConfigState) http.Handler {
+func handle(fn handleFunc, storage *storage.Storage, config *config.Server) http.Handler {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		status, err := fn(w, r, &data{

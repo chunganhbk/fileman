@@ -16,13 +16,13 @@ type modifyRequest struct {
 	Which []string `json:"which"` // Answer to: which fields?
 }
 
-func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handler, error) {
+func NewHandler(storage *storage.Storage, config *config.Server) (http.Handler, error) {
 	r := mux.NewRouter()
 
 	monkey := func(fn handleFunc) http.Handler {
 		return handle(fn, storage, config)
 	}
-	index, static := getStaticHandlers()
+	index, static := getStaticHandlers(config)
 	r.NotFoundHandler = index
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", static))
 	api := r.PathPrefix("/api").Subrouter()
@@ -56,7 +56,7 @@ func NewHandler(storage *storage.Storage, config config.ConfigState) (http.Handl
 	return http.StripPrefix(config.BaseURL, r), nil
 	//return c.Handler(r), nil
 }
-func getStaticHandlers() (http.Handler, http.Handler) {
+func getStaticHandlers(config *config.Server) (http.Handler, http.Handler) {
 	box := rice.MustFindBox("../web/dist")
 	handler := http.FileServer(box.HTTPBox())
 	index := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +65,7 @@ func getStaticHandlers() (http.Handler, http.Handler) {
 		}
 		w.Header().Set("x-xss-protection", "1; mode=block")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		staticURL := strings.TrimPrefix(config.State.BaseURL +"/static", "/")
+		staticURL := strings.TrimPrefix(config.BaseURL +"/static", "/")
 		data := map[string]interface{}{
 			"BASE_URL":         "",
 			"NAME":  "File manger",
